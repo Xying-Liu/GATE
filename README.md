@@ -18,4 +18,4 @@ The following parameter settings are used in the experiments:
 - `m = 2`: Parameter used to identify boundary vertices.
 - `alpha = 0.05`: Significance level for hypothesis testing.
 
-For datasets with more than two features, principal component analysis (PCA) is applied to retain at least 95% of the total variance.
+For high-dimensional datasets, principal component analysis (PCA) is applied to retain at least 95% of the total variance.
