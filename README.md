@@ -18,7 +18,7 @@ The following parameter settings are used in the experiments:
 - `k = 9`: Number of nearest neighbors used to construct the graph.
 - `m = 2`: Parameter used to identify boundary vertices.
 - `alpha = 0.05`: Significance level for hypothesis testing.
-- | Partitioning method (`SPLITTER`) | `girvan_newman` | Algorithm used to generate a candidate bipartition of a connected graph. |
+- `SPLITTER = "girvan_newman"`: Graph partitioning algorithm used to generate a candidate bipartition of a connected graph.
 
 GATE can use different graph partitioning algorithms to generate candidate splits. The implementation supports Girvan–Newman (`girvan_newman`), normalized cut (`normalized_cut`), and Kernighan–Lin (`kernighan_lin`). We use **Girvan–Newman** in all experiments.
 
