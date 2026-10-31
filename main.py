@@ -9,15 +9,9 @@ from sklearn.datasets import load_iris, load_wine, make_blobs, make_circles
 from sklearn.neighbors import kneighbors_graph
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
-# The metrics module is optional for clustering.
-try:
-    from metrics import evaluate
-except ModuleNotFoundError as exc:
-    if exc.name != "metrics":
-        raise
-    evaluate = None
+from metrics import evaluate
 
-DATA_DIR = Path(__file__).resolve().parent / "datasets"
+DATA_DIR = Path(__file__).resolve().parent / "Datasets"
 SINGLE_DATASET = "iris"
 DELIMITER = ","
 
@@ -28,13 +22,20 @@ ALPHA = 0.05
 MIN_CLUSTER_SIZE = 10
 RANDOM_STATE = None
 RUN_ALL_DATASETS = True
-VISUALIZE_DATASET = "aggregation"  # Show recursive splits for this dataset. Set to None to disable plots.
+VISUALIZE_DATASET = None  # Show recursive splits for this dataset. Set to None to disable plots.
 USE_PCA_FOR_HIGH_DIM = True
 PCA_MIN_FEATURES = 3           # Apply PCA when the original feature count reaches this threshold.
 PCA_VARIANCE = 0.95          # Target cumulative explained variance.
 
 
 def load_numeric_dataset(path, label_col=-1):
+    if not path.is_file():
+        # Locate the requested file in the repository's dataset subdirectories.
+        matches = sorted(p for p in DATA_DIR.rglob("*")
+                         if p.is_file() and p.name.casefold() == path.name.casefold())
+        if len(matches) != 1:
+            raise FileNotFoundError(f"Expected one file named {path.name} under {DATA_DIR}. Found: {matches}")
+        path = matches[0]
     data = np.genfromtxt(path, delimiter=DELIMITER, dtype=float,
                          missing_values="?", filling_values=np.nan)
     if data.ndim == 1:
@@ -274,9 +275,8 @@ def run_dataset(name, loader):
     )
     print(f"{name}: estimated K = {len(np.unique(labels))}, "
           f"cluster sizes = {np.bincount(labels).tolist()}")
-    if evaluate is not None:
-        acc, ari = evaluate(y_true, labels)
-        print(f"ACC = {acc:.4f}, ARI = {ari:.4f}")
+    acc, ari = evaluate(y_true, labels)
+    print(f"ACC = {acc:.4f}, ARI = {ari:.4f}")
     return labels, history
 
 
